@@ -13,12 +13,12 @@ def test_img(net_g, datatest, args):
     # testing
     test_loss = 0
     correct = 0
-    data_loader = DataLoader(datatest, batch_size=args.bs)
+    data_loader = DataLoader(datatest, batch_size=args.bs)      # 测试时bs为128，即数据128一组
     l = len(data_loader)
     for idx, (data, target) in enumerate(data_loader):
         if args.gpu != -1:
             data, target = data.cuda(), target.cuda()
-        log_probs = net_g(data)
+        log_probs = net_g(data)     # 前向传播计算预测值（Server共享的模型）
         # sum up batch loss
         test_loss += F.cross_entropy(log_probs, target, reduction='sum').item()
         # get the index of the max log-probability
@@ -30,5 +30,5 @@ def test_img(net_g, datatest, args):
     if args.verbose:
         print('\nTest set: Average loss: {:.4f} \nAccuracy: {}/{} ({:.2f}%)\n'.format(
             test_loss, correct, len(data_loader.dataset), accuracy))
-    return accuracy, test_loss
+    return accuracy, test_loss          # 返回准确度和损失
 
